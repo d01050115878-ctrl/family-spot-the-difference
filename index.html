@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no" />
+<title>틀린그림찾기 🔍</title>
+<meta name="description" content="가족과 함께 즐기는 틀린그림찾기 - 스테이지가 오를수록 찾아야 할 그림 수가 늘어나는 두뇌 게임" />
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔍</text></svg>" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Gaegu:wght@400;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <header class="topbar">
+    <h1 class="logo">🔍 틀린그림찾기</h1>
+    <div class="topbar-actions">
+      <button id="soundBtn" class="icon-btn" title="소리 켜기/끄기" aria-label="소리 켜기 끄기">🔊</button>
+      <button id="howtoBtn" class="icon-btn" title="게임 방법" aria-label="게임 방법">❓</button>
+    </div>
+  </header>
+
+  <section id="startScreen" class="screen start-screen">
+    <div class="start-card">
+      <p class="start-emojis">🍧🏖️🚒 &nbsp; 🍕🍉🌻</p>
+      <h2>두 그림에서 다른 곳을 찾아보세요!</h2>
+      <p class="start-desc">똑같아 보이는 두 그림 사이에 <b>숨어있는 다른 부분</b>을 모두 찾아 탭 하세요. 스테이지마다 다른 그림과 다른 개수의 정답이 기다리고 있어요!</p>
+      <p class="total-score">🏆 총 점수 <span id="totalScoreVal">0</span></p>
+      <div class="stage-select">
+        <p class="diff-label">스테이지를 골라주세요</p>
+        <div id="stageGrid" class="stage-grid"></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="gameScreen" class="screen game-screen hidden">
+    <div class="hud">
+      <div class="hud-item">
+        <span class="hud-label">🎯 스테이지</span>
+        <span id="stageVal" class="hud-value">1</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">⏱ 시간</span>
+        <span id="timerVal" class="hud-value">00:00</span>
+      </div>
+      <div class="hud-item">
+        <span class="hud-label">🔍 남은 개수</span>
+        <span id="remainVal" class="hud-value">0</span>
+      </div>
+      <div class="hud-item score-item">
+        <span class="hud-label">⭐ 점수</span>
+        <span id="scoreVal" class="hud-value">0</span>
+      </div>
+      <div class="hud-buttons">
+        <button id="hintBtn" class="hud-btn">💡 힌트</button>
+        <button id="restartBtn" class="hud-btn">🔁 다시</button>
+        <button id="homeBtn" class="hud-btn">🏠 처음</button>
+      </div>
+    </div>
+
+    <p id="themeLabel" class="theme-label"></p>
+
+    <div class="board-wrap">
+      <div class="panel" id="leftPanelWrap">
+        <div class="img-wrap" id="leftImgWrap">
+          <img id="leftImg" class="scene-img" alt="원본 그림" draggable="false" />
+          <div class="markers-layer" id="leftMarkers"></div>
+        </div>
+      </div>
+      <div class="panel" id="rightPanelWrap">
+        <div class="img-wrap" id="rightImgWrap">
+          <img id="rightImg" class="scene-img" alt="비교 그림" draggable="false" />
+          <div class="markers-layer" id="rightMarkers"></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+  </section>
+
+  <div id="winModal" class="modal-backdrop hidden">
+    <div class="modal win-modal">
+      <p class="modal-emojis">🎉🔍🎉</p>
+      <h2>스테이지 클리어!</h2>
+      <p id="winStars" class="modal-stars"></p>
+      <p id="winTime" class="modal-time"></p>
+      <p id="winScore" class="modal-time"></p>
+      <p id="winBest" class="modal-best"></p>
+      <div class="modal-buttons">
+        <button id="nextStageBtn" class="hud-btn primary-btn">▶️ 다음 스테이지</button>
+        <button id="playAgainBtn" class="hud-btn">🔁 다시 도전</button>
+        <button id="winHomeBtn" class="hud-btn">🏠 스테이지 선택</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="failModal" class="modal-backdrop hidden">
+    <div class="modal fail-modal">
+      <p class="modal-emojis">⏰😅</p>
+      <h2>시간이 다 됐어요!</h2>
+      <p id="failDesc" class="modal-time"></p>
+      <div class="modal-buttons">
+        <button id="retryBtn" class="hud-btn primary-btn">🔁 다시 도전</button>
+        <button id="failHomeBtn" class="hud-btn">🏠 스테이지 선택</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="howtoModal" class="modal-backdrop hidden">
+    <div class="modal howto-modal">
+      <p class="modal-emojis">❓🔍❓</p>
+      <h2>게임 방법</h2>
+      <ul class="howto-list">
+        <li>왼쪽과 오른쪽 그림은 거의 똑같지만, 몇 군데가 달라요.</li>
+        <li>다른 부분을 찾으면 그림 위를 <b>탭(클릭)</b> 하세요.</li>
+        <li>제한 시간 안에 다른 곳을 모두 찾으면 스테이지 클리어!</li>
+        <li>스테이지마다 그림과 찾아야 할 다른 곳의 개수가 달라요.</li>
+        <li>정답을 모르겠다면 💡힌트 버튼을 눌러보세요. (점수가 조금 줄어요)</li>
+        <li>엉뚱한 곳을 누르면 점수가 살짝 깎이니 신중하게 찾아보세요.</li>
+      </ul>
+      <div class="modal-buttons">
+        <button id="closeHowtoBtn" class="hud-btn primary-btn">알겠어요!</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="stages-data.js"></script>
+<script src="script.js"></script>
+</body>
+</html>

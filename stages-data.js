@@ -1,0 +1,100 @@
+/* =========================================================
+   틀린그림찾기 - 실제 그림 스테이지 데이터
+   각 스테이지는 왼쪽/오른쪽(또는 위/아래) 그림 두 장과
+   실제 그림에서 찾아낸 "다른 곳" 좌표(px, 원본 이미지 기준)로 구성됩니다.
+   ========================================================= */
+const STAGES = [
+  {
+    id: 'bingsu',
+    title: '팥빙수 간식',
+    emoji: '🍧',
+    imgA: 'images/bingsu_a.jpg',
+    imgB: 'images/bingsu_b.jpg',
+    w: 712, h: 350,
+    time: 70,
+    diffs: [
+      { x: 132, y: 87,  r: 42 },
+      { x: 342, y: 47,  r: 38 },
+      { x: 552, y: 87,  r: 42 },
+      { x: 167, y: 252, r: 42 },
+      { x: 572, y: 252, r: 46 },
+    ],
+  },
+  {
+    id: 'watermelonbeach',
+    title: '바닷가 수박',
+    emoji: '🏖️',
+    imgA: 'images/watermelonbeach_a.jpg',
+    imgB: 'images/watermelonbeach_b.jpg',
+    w: 703, h: 320,
+    time: 65,
+    diffs: [
+      { x: 142, y: 132, r: 40 },
+      { x: 267, y: 202, r: 50 },
+      { x: 467, y: 227, r: 50 },
+      { x: 297, y: 62,  r: 36 },
+    ],
+  },
+  {
+    id: 'firestation',
+    title: '소방서 아저씨',
+    emoji: '🚒',
+    imgA: 'images/firestation_a.png',
+    imgB: 'images/firestation_b.png',
+    w: 640, h: 730,
+    time: 60,
+    diffs: [
+      { x: 266.1, y: 556.9, r: 97.4 },
+      { x: 350.5, y: 584.2, r: 61.7 },
+      { x: 461.5, y: 538.7, r: 107.1 },
+    ],
+  },
+  {
+    id: 'pizza',
+    title: '피자 가게',
+    emoji: '🍕',
+    imgA: 'images/pizza_a.png',
+    imgB: 'images/pizza_b.png',
+    w: 640, h: 730,
+    time: 60,
+    diffs: [
+      { x: 64.9,  y: 584.2, r: 103.9 },
+      { x: 110.3, y: 233.0, r: 97.4 },
+      { x: 230.4, y: 504.3, r: 100.6 },
+    ],
+  },
+  {
+    id: 'grandpa',
+    title: '수박 먹는 할머니 할아버지',
+    emoji: '🍉',
+    imgA: 'images/grandpa_a.jpg',
+    imgB: 'images/grandpa_b.jpg',
+    w: 345, h: 462,
+    time: 100,
+    diffs: [
+      { x: 292, y: 116, r: 42 },
+      { x: 198, y: 40,  r: 32 },
+      { x: 163, y: 180, r: 38 },
+      { x: 241, y: 260, r: 50 },
+      { x: 310, y: 430, r: 38 },
+      { x: 216, y: 360, r: 46 },
+    ],
+  },
+  {
+    id: 'greenhouse',
+    title: '온실 속 정원',
+    emoji: '🌻',
+    imgA: 'images/greenhouse_a.png',
+    imgB: 'images/greenhouse_b.png',
+    w: 640, h: 730,
+    time: 100,
+    diffs: [
+      { x: 585.5, y: 292.1, r: 84.4 },
+      { x: 582.2, y: 547.2, r: 71.4 },
+      { x: 327.8, y: 523.8, r: 90.9 },
+      { x: 292.7, y: 147.3, r: 61.7 },
+      { x: 124.6, y: 561.5, r: 48.7 },
+      { x: 430.3, y: 55.2,  r: 45.4 },
+    ],
+  },
+];
