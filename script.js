@@ -3,6 +3,7 @@
    ========================================================= */
 
 const TOTAL_STAGES = STAGES.length;
+const MISTAKE_LIMIT = 3;
 
 /* ---------- 유틸 ---------- */
 function clamp(v, min, max) { return Math.max(min, Math.min(max, v)); }
@@ -80,6 +81,7 @@ const stageVal = $('stageVal');
 const timerVal = $('timerVal');
 const remainVal = $('remainVal');
 const scoreVal = $('scoreVal');
+const missVal = $('missVal');
 const themeLabel = $('themeLabel');
 const leftImg = $('leftImg');
 const rightImg = $('rightImg');
@@ -152,6 +154,7 @@ function startStage(n) {
   stageVal.textContent = n;
   remainVal.textContent = state.diffCount;
   scoreVal.textContent = 0;
+  missVal.textContent = `0/${MISTAKE_LIMIT}`;
   timerVal.textContent = fmtTime(state.timeLeft);
 
   leftImgWrap.style.aspectRatio = `${cfg.w} / ${cfg.h}`;
@@ -181,7 +184,7 @@ function tick() {
   timerVal.textContent = fmtTime(state.timeLeft);
   if (state.timeLeft <= 0) {
     stopTimer();
-    endStageFail();
+    endStageFail('time');
   }
 }
 function stopTimer() { if (state.timerId) clearInterval(state.timerId); state.timerId = null; }
@@ -194,6 +197,11 @@ function computeCurrentScore() {
   return score;
 }
 
+/* 클릭 판정용 반경: 정확한 지점이 아니어도 다른 부분 근처를 누르면 정답으로 인정 */
+function hitRadius(r, cfg) {
+  return Math.max(r * 2.4, Math.min(cfg.w, cfg.h) * 0.045);
+}
+
 function onPanelPointer(e, side) {
   if (!state.active) return;
   const cfg = STAGES[state.stage - 1];
@@ -202,16 +210,22 @@ function onPanelPointer(e, side) {
   let hit = null;
   for (const d of state.diffs) {
     if (d.found) continue;
-    if (Math.hypot(pt.x - d.x, pt.y - d.y) <= d.r) { hit = d; break; }
+    if (Math.hypot(pt.x - d.x, pt.y - d.y) <= hitRadius(d.r, cfg)) { hit = d; break; }
   }
   if (hit) {
     markFound(hit);
   } else {
     state.mistakes++;
     soundWrong();
-    addMissRipple(side === 'left' ? leftMarkers : rightMarkers, pt.x, pt.y, cfg);
+    addMissMarker(side === 'left' ? leftMarkers : rightMarkers, pt.x, pt.y, cfg);
+    missVal.textContent = `${state.mistakes}/${MISTAKE_LIMIT}`;
     const wrap = side === 'left' ? leftPanelWrap : rightPanelWrap;
     wrap.classList.remove('shake'); void wrap.offsetWidth; wrap.classList.add('shake');
+    if (state.mistakes >= MISTAKE_LIMIT) {
+      stopTimer();
+      state.active = false;
+      setTimeout(() => endStageFail('mistakes'), 450);
+    }
   }
 }
 leftImgWrap.addEventListener('click', (e) => onPanelPointer(e, 'left'));
@@ -223,12 +237,12 @@ function pct(v, total) { return (v / total) * 100; }
 function addFoundMarker(layer, d, cfg) {
   const wrap = document.createElement('div');
   wrap.className = 'marker found-marker';
-  const sizePct = pct(d.r * 2, cfg.w);
+  const sizePct = pct(d.r * 2.2, cfg.w);
   wrap.style.left = pct(d.x, cfg.w) + '%';
   wrap.style.top = pct(d.y, cfg.h) + '%';
   wrap.style.width = sizePct + '%';
   wrap.style.aspectRatio = '1 / 1';
-  wrap.innerHTML = '<div class="ring"></div><div class="check">✅</div>';
+  wrap.innerHTML = '<div class="ring pencil-ring"></div>';
   layer.appendChild(wrap);
 }
 
@@ -245,15 +259,15 @@ function addHintRing(layer, d, cfg) {
   setTimeout(() => wrap.remove(), 1550);
 }
 
-function addMissRipple(layer, x, y, cfg) {
+function addMissMarker(layer, x, y, cfg) {
   const wrap = document.createElement('div');
   wrap.className = 'marker miss-marker';
-  const sizePct = pct(60, cfg.w);
+  const sizePct = pct(Math.min(cfg.w, cfg.h) * 0.09, cfg.w);
   wrap.style.left = pct(x, cfg.w) + '%';
   wrap.style.top = pct(y, cfg.h) + '%';
   wrap.style.width = sizePct + '%';
   wrap.style.aspectRatio = '1 / 1';
-  wrap.innerHTML = '<div class="ring miss-ring"></div>';
+  wrap.innerHTML = '<div class="miss-x"><span></span><span></span></div>';
   layer.appendChild(wrap);
   setTimeout(() => wrap.remove(), 520);
 }
@@ -318,9 +332,16 @@ function endStageWin() {
   winModal.classList.remove('hidden');
 }
 
-function endStageFail() {
+function endStageFail(reason) {
   state.active = false;
   soundFail();
+  if (reason === 'mistakes') {
+    $('failEmojis').textContent = '❌😅';
+    $('failTitle').textContent = `실수를 ${MISTAKE_LIMIT}번 해서 실패했어요!`;
+  } else {
+    $('failEmojis').textContent = '⏰😅';
+    $('failTitle').textContent = '시간이 다 됐어요!';
+  }
   $('failDesc').textContent = `${state.found} / ${state.diffCount}개를 찾았어요. 조금만 더 힘내봐요!`;
   failModal.classList.remove('hidden');
 }

@@ -54,6 +54,10 @@
         <span class="hud-label">⭐ 점수</span>
         <span id="scoreVal" class="hud-value">0</span>
       </div>
+      <div class="hud-item miss-item">
+        <span class="hud-label">❌ 실수</span>
+        <span id="missVal" class="hud-value">0/3</span>
+      </div>
       <div class="hud-buttons">
         <button id="hintBtn" class="hud-btn">💡 힌트</button>
         <button id="restartBtn" class="hud-btn">🔁 다시</button>
@@ -99,8 +103,8 @@
 
   <div id="failModal" class="modal-backdrop hidden">
     <div class="modal fail-modal">
-      <p class="modal-emojis">⏰😅</p>
-      <h2>시간이 다 됐어요!</h2>
+      <p id="failEmojis" class="modal-emojis">⏰😅</p>
+      <h2 id="failTitle">시간이 다 됐어요!</h2>
       <p id="failDesc" class="modal-time"></p>
       <div class="modal-buttons">
         <button id="retryBtn" class="hud-btn primary-btn">🔁 다시 도전</button>
@@ -119,7 +123,8 @@
         <li>제한 시간 안에 다른 곳을 모두 찾으면 스테이지 클리어!</li>
         <li>스테이지마다 그림과 찾아야 할 다른 곳의 개수가 달라요.</li>
         <li>정답을 모르겠다면 💡힌트 버튼을 눌러보세요. (점수가 조금 줄어요)</li>
-        <li>엉뚱한 곳을 누르면 점수가 살짝 깎이니 신중하게 찾아보세요.</li>
+        <li>정확한 위치가 아니어도 다른 부분 근처를 누르면 정답으로 인정돼요.</li>
+        <li>엉뚱한 곳은 <b>3번까지만</b> 눌러도 괜찮아요. 4번째부터는 스테이지 실패!</li>
       </ul>
       <div class="modal-buttons">
         <button id="closeHowtoBtn" class="hud-btn primary-btn">알겠어요!</button>
