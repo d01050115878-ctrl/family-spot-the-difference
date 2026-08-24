@@ -42,11 +42,14 @@ const STAGES = [
     imgA: 'images/firestation_a.png',
     imgB: 'images/firestation_b.png',
     w: 640, h: 730,
-    time: 60,
+    time: 100,
     diffs: [
       { x: 266.1, y: 556.9, r: 97.4 },
       { x: 350.5, y: 584.2, r: 61.7 },
       { x: 461.5, y: 538.7, r: 107.1 },
+      { x: 205, y: 175, r: 70 },
+      { x: 322, y: 175, r: 60 },
+      { x: 445, y: 177, r: 75 },
     ],
   },
   {
@@ -56,11 +59,13 @@ const STAGES = [
     imgA: 'images/pizza_a.png',
     imgB: 'images/pizza_b.png',
     w: 640, h: 730,
-    time: 60,
+    time: 90,
     diffs: [
       { x: 64.9,  y: 584.2, r: 103.9 },
       { x: 110.3, y: 233.0, r: 97.4 },
       { x: 230.4, y: 504.3, r: 100.6 },
+      { x: 86, y: 85, r: 85 },
+      { x: 422, y: 42, r: 65 },
     ],
   },
   {
@@ -87,7 +92,7 @@ const STAGES = [
     imgA: 'images/greenhouse_a.png',
     imgB: 'images/greenhouse_b.png',
     w: 640, h: 730,
-    time: 100,
+    time: 115,
     diffs: [
       { x: 585.5, y: 292.1, r: 84.4 },
       { x: 582.2, y: 547.2, r: 71.4 },
@@ -95,6 +100,7 @@ const STAGES = [
       { x: 292.7, y: 147.3, r: 61.7 },
       { x: 124.6, y: 561.5, r: 48.7 },
       { x: 430.3, y: 55.2,  r: 45.4 },
+      { x: 527, y: 42, r: 50 },
     ],
   },
 ];
