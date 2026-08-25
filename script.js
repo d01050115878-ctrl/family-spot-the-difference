@@ -2,6 +2,21 @@
    틀린그림찾기 - 게임 로직 (실제 그림 기반)
    ========================================================= */
 
+/* 스테이지 번호(1~20)와 난이도(다른 곳 개수) 순서는 그대로 유지하되,
+   같은 난이도 그룹 안에서는 어떤 도안이 몇 번에 배치될지 매판 랜덤으로 섞음 */
+(function shuffleStagesWithinDifficultyGroups() {
+  let start = 0;
+  while (start < STAGES.length) {
+    let end = start + 1;
+    while (end < STAGES.length && STAGES[end].diffs.length === STAGES[start].diffs.length) end++;
+    for (let i = end - 1; i > start; i--) {
+      const j = start + Math.floor(Math.random() * (i - start + 1));
+      const tmp = STAGES[i]; STAGES[i] = STAGES[j]; STAGES[j] = tmp;
+    }
+    start = end;
+  }
+})();
+
 const TOTAL_STAGES = STAGES.length;
 const MISTAKE_LIMIT = 3;
 
